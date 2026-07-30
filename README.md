@@ -31,7 +31,10 @@ Before using AuraDL, make sure you have the following installed on your system:
 2. **FFmpeg**:
    - Required for remuxing and embedding metadata/artwork.
    - Add `ffmpeg.exe` to your System `PATH` or specify its path in the **Settings** tab.
-3. **gamdl / yt-dlp**:
+3. **N_m3u8DL-RE**:
+   - CLI tool for downloading and parsing stream manifests.
+   - Download the latest binary from **[N_m3u8DL-RE Releases](https://github.com/nilaoda/N_m3u8DL-RE/releases/latest)**.
+4. **gamdl / yt-dlp**:
    - Download engine backend. Ensure `gamdl` or `yt-dlp` is installed and accessible.
 
 ---
@@ -75,9 +78,9 @@ If you prefer using an authentication token header directly from your browser se
 
 ### Method 3: Wrapper Server (`wrapper-server`)
 
-For advanced setups utilizing a local wrapper server or proxy server (such as an Apple Music API wrapper):
+For advanced setups utilizing a local wrapper server or proxy server (such as **[glomatico/wrapper-v2](https://github.com/glomatico/wrapper-v2)**):
 
-1. Start your local wrapper server on your machine (e.g., `http://localhost:8080`).
+1. Set up and start your wrapper server using **[glomatico/wrapper-v2](https://github.com/glomatico/wrapper-v2)** on your machine (e.g., `http://localhost:8080`).
 2. Open AuraDL, go to **Settings**, set **Wrapper Server Base URL** to your server address (e.g., `http://localhost:8080`).
 3. Set **API Method** to **`wrapper-server`**.
 
@@ -108,19 +111,28 @@ To compile and package AuraDL manually from source code:
 
 ```powershell
 # 1. Clone the repository
-git clone https://github.com/your-username/AuraDL.git
+git clone https://github.com/dev-aman-hear/AuraDL.git
 cd AuraDL
 
 # 2. Compile Java source files
 $srcFiles = Get-ChildItem -Path "src-java" -Recurse -Filter "*.java" | Select-Object -ExpandProperty FullName
 javac -encoding UTF-8 -d "build\java_classes" $srcFiles
 
-# 3. Create standalone executable JAR
+# 3. Copy assets and create standalone executable JAR
+New-Item -ItemType Directory -Path "build\java_classes\assets" -Force
+Copy-Item -Force "src-java\assets\*" "build\java_classes\assets\"
 jar cfm "dist-java\AuraDL.jar" "build\MANIFEST.MF" -C "build\java_classes" .
 
 # 4. Run AuraDL
 java -cp "dist-java\AuraDL.jar" com.auradl.Main
 ```
+
+---
+
+## 🙏 Credits & Acknowledgments
+
+- **N_m3u8DL-RE**: Dash & HLS Stream Downloader by [nilaoda](https://github.com/nilaoda) — **[N_m3u8DL-RE Latest Releases](https://github.com/nilaoda/N_m3u8DL-RE/releases/latest)**
+- **Apple Music Wrapper**: Wrapper server implementation by [glomatico](https://github.com/glomatico) — **[glomatico/wrapper-v2](https://github.com/glomatico/wrapper-v2)**
 
 ---
 
