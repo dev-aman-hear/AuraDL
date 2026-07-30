@@ -1,0 +1,18 @@
+# Build outputs
+build/
+dist/
+dist-java/
+dist-exe/
+
+# User Data & Downloads
+Apple Music/
+cookies.txt
+*.yml
+config.yml
+
+# IDE & Temporary Files
+.idea/
+.vscode/
+scratch/
+*.class
+*.log
