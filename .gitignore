@@ -3,6 +3,7 @@ build/
 dist/
 dist-java/
 dist-exe/
+*.zip
 
 # User Data & Downloads
 Apple Music/

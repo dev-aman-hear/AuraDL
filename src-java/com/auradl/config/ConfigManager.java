@@ -122,6 +122,9 @@ public class ConfigManager {
                         config.setAlbumFolderTemplate(val);
                         break;
                     case "song_file_template":
+                        if (val != null) {
+                            val = val.replace("{track_number}", "{track:02d}");
+                        }
                         config.setSongFileTemplate(val);
                         break;
                     case "song_codec_priority":

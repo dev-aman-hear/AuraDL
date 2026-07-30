@@ -273,20 +273,75 @@ public class DownloadManager {
             command.add(albumTemplate);
 
             if (config.getSongFileTemplate() != null && !config.getSongFileTemplate().isEmpty()) {
+                String songTmpl = config.getSongFileTemplate().replace("{track_number}", "{track:02d}");
                 command.add("--single-disc-file-template");
-                command.add(config.getSongFileTemplate());
+                command.add(songTmpl);
                 command.add("--no-album-file-template");
-                command.add(config.getSongFileTemplate());
+                command.add(songTmpl);
             }
 
-            if (config.getNm3u8dlrePath() != null && !config.getNm3u8dlrePath().isEmpty() && new File(config.getNm3u8dlrePath()).exists()) {
+            // Smart resolution for N_m3u8DL-RE.exe (defaulting to folder location)
+            File nm3u8dlreFile = null;
+            if (config.getNm3u8dlrePath() != null && !config.getNm3u8dlrePath().isEmpty()) {
+                File candidate = new File(config.getNm3u8dlrePath());
+                if (candidate.exists()) nm3u8dlreFile = candidate;
+            }
+            if (nm3u8dlreFile == null) {
+                File candidate = new File("N_m3u8DL-RE.exe");
+                if (candidate.exists()) {
+                    nm3u8dlreFile = candidate;
+                } else {
+                    candidate = new File("dist/N_m3u8DL-RE.exe");
+                    if (candidate.exists()) nm3u8dlreFile = candidate;
+                }
+            }
+            if (nm3u8dlreFile == null) {
+                try {
+                    File codeSourceFile = new File(DownloadManager.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+                    File appDir = codeSourceFile.isDirectory() ? codeSourceFile : codeSourceFile.getParentFile();
+                    File nearApp = new File(appDir, "N_m3u8DL-RE.exe");
+                    if (!nearApp.exists() && appDir.getParentFile() != null) {
+                        nearApp = new File(appDir.getParentFile(), "N_m3u8DL-RE.exe");
+                    }
+                    if (nearApp.exists()) nm3u8dlreFile = nearApp;
+                } catch (Exception ignored) {}
+            }
+            if (nm3u8dlreFile != null && nm3u8dlreFile.exists()) {
                 command.add("--nm3u8dlre-path");
-                command.add(config.getNm3u8dlrePath());
+                command.add(nm3u8dlreFile.getAbsolutePath());
+                System.out.println("[DownloadManager] Using N_m3u8DL-RE binary: " + nm3u8dlreFile.getAbsolutePath());
             }
 
-            if (config.getFfmpegPath() != null && !config.getFfmpegPath().isEmpty() && new File(config.getFfmpegPath()).exists()) {
+            // Smart resolution for ffmpeg.exe
+            File ffmpegFile = null;
+            if (config.getFfmpegPath() != null && !config.getFfmpegPath().isEmpty()) {
+                File candidate = new File(config.getFfmpegPath());
+                if (candidate.exists()) ffmpegFile = candidate;
+            }
+            if (ffmpegFile == null) {
+                File candidate = new File("ffmpeg.exe");
+                if (candidate.exists()) {
+                    ffmpegFile = candidate;
+                } else {
+                    candidate = new File("dist/ffmpeg.exe");
+                    if (candidate.exists()) ffmpegFile = candidate;
+                }
+            }
+            if (ffmpegFile == null) {
+                try {
+                    File codeSourceFile = new File(DownloadManager.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+                    File appDir = codeSourceFile.isDirectory() ? codeSourceFile : codeSourceFile.getParentFile();
+                    File nearApp = new File(appDir, "ffmpeg.exe");
+                    if (!nearApp.exists() && appDir.getParentFile() != null) {
+                        nearApp = new File(appDir.getParentFile(), "ffmpeg.exe");
+                    }
+                    if (nearApp.exists()) ffmpegFile = nearApp;
+                } catch (Exception ignored) {}
+            }
+            if (ffmpegFile != null && ffmpegFile.exists()) {
                 command.add("--ffmpeg-path");
-                command.add(config.getFfmpegPath());
+                command.add(ffmpegFile.getAbsolutePath());
+                System.out.println("[DownloadManager] Using FFmpeg binary: " + ffmpegFile.getAbsolutePath());
             }
 
             command.add("--synced-lyrics-format");

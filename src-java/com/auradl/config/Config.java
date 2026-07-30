@@ -16,9 +16,9 @@ public class Config {
     private String tempDir = ".";
     private String downloadMode = "ytdlp";
     private String nm3u8dlrePath = "N_m3u8DL-RE.exe";
-    private String ffmpegPath = "C:/Added To Path/ffmpeg-8.1.1-essentials_build/bin/ffmpeg.exe";
+    private String ffmpegPath = "ffmpeg.exe";
     private String albumFolderTemplate = "{album_artist}/{album}";
-    private String songFileTemplate = "{track_number} {title}";
+    private String songFileTemplate = "{track:02d} {title}";
     private String songCodecPriority = "alac,atmos,aac";
     private String coverFormat = "jpg";
     private int coverSize = 1200;
